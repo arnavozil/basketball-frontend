@@ -1,0 +1,60 @@
+@keyframes shimmer {
+    0% {
+      background-position: -100rem 0;
+    }
+    100% {
+      background-position: 100rem 0;
+    }
+}
+
+
+@keyframes shrink {
+	0%{
+		transform: none;
+	}
+	100%{
+		transform: translateX(200%);
+	}
+}
+
+@keyframes expand {
+	0%{
+		transform: translateX(200%);
+	}
+	100%{
+		transform: none;
+	}
+}
+
+@keyframes fromUp {
+	0%{
+		opacity: 0;
+		transform: translateY(-50%);
+	}
+	100%{
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes fromDown {
+	0%{
+		opacity: 0;
+		transform: translateY(50%);
+	}
+	100%{
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes fromRight {
+	0%{
+		opacity: 0;
+		// transform: translateX(200%);
+	}
+	100%{
+		opacity: 1;
+		// transform: translateX(-40%);
+	}
+}

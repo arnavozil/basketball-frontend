@@ -1,0 +1,13 @@
+.timeBand{
+    width: 100%;
+    height: 2rem;
+    position: relative;
+    background-color: #88888888;    
+
+    &_timer{
+        transition: width .1s ease;
+        height: 100%;
+        background: linear-gradient(to right, springgreen, green);
+        position: absolute;
+    }
+}
