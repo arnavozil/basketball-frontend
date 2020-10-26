@@ -26,7 +26,7 @@ const Players = ({
     }, []);
 
     useEffect(() => {
-        setParticipants(allPlayers);
+        setParticipants((allPlayers || []).sort((a, b) => (b.points || 0) - (a.points || 0)));
     }, [allPlayers]);
 
     useEffect(() => {
@@ -61,34 +61,75 @@ const Players = ({
         console.log('inside');
 
         dispatch(createMatchAction(id1, id2));
+    };
+    
+    const renderModel = (player = {}, pos = 1, styles) => {
+
+        const { points, username, firstName } = player;
+        return (
+            <div className={s.board_item}>
+                <div style={styles} className={s.board_item_circle}>
+                    {username[0]}
+                    <span className={s.board_item_circle_pos}>{pos}</span>
+                </div>
+                <div className={s.board_item_name}>{firstName}</div>
+                <div className={s.board_item_points}>{points} points</div>
+            </div>
+        )
+    };
+
+    const renderLeaders = (members = []) => {
+
+        if(members?.length !== 3){
+            return;
+        }
+
+        return (
+            <div className={s.board}>
+                {renderModel(members[1], 2, {width: '5rem', height: '5rem'})}
+                {renderModel(members[0])}
+                {renderModel(members[2], 3, {width: '4rem', height: '4rem'})}
+            </div>
+        )
     }
 
     return (
         <main className={s.main}>
-            <h1>LeaderBoard</h1>
-            {(participants || []).sort((a, b) => (b.points || 0) - (a.points || 0)).map(el => {
-                let { matches, won, lost, points, username, firstName, id, scored, conceded } = el;
+            <h1 className={s.main_heading}>LeaderBoard</h1>
+            {renderLeaders(participants.slice(0, 3))}
+            {participants.map(el => {
+                let { matches, won, lost, points, firstName, id, scored, conceded } = el;
                 // lost = 4; won = 7; matches = 11; scored = 14; conceded = 9; points = 14;
                 return (
-                    <div style={selectedPlayers.includes(id) ? {backgroundColor: 'springgreen'} : {}} onClick={() => selectPlayer(id)} className={s.main_card} key={id}>
-                        <span className={s.main_card_text}>{username}</span>
-                        <span className={s.main_card_text}>Win %: {((won / (matches || 1)) * 100).toFixed(2)}</span>
-                        <span className={s.main_card_text}>Matches Won/Lost: {won}/{lost}</span>
+                    <div style={selectedPlayers.includes(id) ? {backgroundColor: '#c9f2e3'} : {}} onClick={() => selectPlayer(id)} className={s.main_card} key={id}>
+                        <span className={s.main_card_head}>{firstName}</span>
+                        <span className={s.main_card_win}>Win percentage: {((won / (matches || 1)) * 100).toFixed(2)}%</span>
+                        <h3 className={s.main_card_heading}>Matches</h3>
+                        <div className={s.main_card_row}>
+                            <span className={s.main_card_row_text}>Won: {won}</span>
+                            <span className={s.main_card_row_text}>Lost: {lost}</span>
+                        </div>
                         <div className={s.main_card_seek}>
                             <span className={s.main_card_seek_won} style={{width: `${(won/(matches || 1))*100}%`}} />
                             <span className={s.main_card_seek_lost} style={{width: `${(lost/(matches || 1))*100}%`, left: `${(won/(matches || 1))*100}%`}} />
                         </div>
-                        <span className={s.main_card_text}>Points scored/conceded: {scored}/{conceded}</span>
+                        <h3 className={s.main_card_heading}>Points</h3>
+                        <div className={s.main_card_row}>
+                            <span className={s.main_card_row_text}>Scored: {scored}</span>
+                            <span className={s.main_card_row_text}>Conceded: {conceded}</span>
+                        </div>
                         <div className={s.main_card_seek}>
                             <span className={s.main_card_seek_won} style={{width: `${(scored/((scored+conceded) || 1))*100}%`}} />
                             <span className={s.main_card_seek_lost} style={{width: `${(conceded/((scored+conceded) || 1))*100}%`, left: `${(scored/((scored+conceded) || 1))*100}%`}} />
                         </div>
-                        <span className={s.main_card_text}>Total match points: {points}</span>
-                        <span className={s.main_card_text}>Average Points: {points / (matches || 1)}</span>
+                        <div className={s.main_card_row}>
+                            <span className={s.main_card_row_text}>Total match points: {points}</span>
+                            <span className={s.main_card_row_text}>Average Points: {(points / (matches || 1)).toFixed(2)}</span>
+                        </div>
                     </div>
                 )
             })}
-            {selectedPlayers.length === 2 ? <button onClick={startMatch}>Start</button> : <></>}
+            {selectedPlayers.length === 2 ? <button className={s.button} onClick={startMatch}>Start</button> : <></>}
         </main>
     );
 };
