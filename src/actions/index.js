@@ -12,7 +12,7 @@ export const allPlayersAction = () => {
 
     return async dispatch => {
         try {
-            const response = await fetch(`${ENDPOINT}/users`, requestOptions);
+            const response = await fetch(`${ENDPOINT}/common/all`, requestOptions);
             const payload = await response.json();
             dispatch({
                 type: 'ALL_PLAYERS',
@@ -29,12 +29,17 @@ export const allPlayersAction = () => {
 };
 
 
-export const createMatchAction = (id1, id2) => {
+export const createMatchAction = ({id1, id2, startTime, endTime}) => {
 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    const body = JSON.stringify({id1, id2});
+    const body = JSON.stringify({
+        "player1":id1,
+        "player2":id2,
+        "startedAt": startTime,
+        "endsAt": endTime
+    });
 
     const requestOptions = {
         method: 'POST',
@@ -45,7 +50,7 @@ export const createMatchAction = (id1, id2) => {
 
     return async dispatch => {
         try {
-            const response = await fetch(`${ENDPOINT}/matches/create`, requestOptions);
+            const response = await fetch(`${ENDPOINT}/matches/startMatch`, requestOptions);
             const payload = await response.json();
             dispatch({
                 type: 'CREATE_SINGLE_MATCH',
@@ -93,13 +98,12 @@ export const updateUserAction = obj => {
     }
 };
 
-export const updateMatchAction = match => {
+export const updateMatchAction = (id, v1, v2) => {
 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    const [id1, id2] = match.players;
-    const body = JSON.stringify({id1, id2, match});
+    const body = JSON.stringify({id, scoredByFirst: v1, scoredBySecond: v2});
 
     const requestOptions = {
         method: 'PUT',
@@ -110,7 +114,7 @@ export const updateMatchAction = match => {
 
     return async dispatch => {
         try {
-            const response = await fetch(`${ENDPOINT}/matches/update`, requestOptions);
+            const response = await fetch(`${ENDPOINT}/matches/saveMatch`, requestOptions);
             const payload = await response.json();
             dispatch({
                 type: 'UPDATE_MATCH',

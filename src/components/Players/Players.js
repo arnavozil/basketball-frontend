@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { allPlayersAction, createMatchAction } from '../../actions';
+import { allPlayersAction } from '../../actions';
 import { useHistory } from 'react-router-dom';
 
 import s from './Players.module.scss';
@@ -29,16 +29,6 @@ const Players = ({
         setParticipants((allPlayers || []).sort((a, b) => (b.points || 0) - (a.points || 0)));
     }, [allPlayers]);
 
-    useEffect(() => {
-        if(createMatch){
-            push({
-                pathname: '/match',
-                state: {
-                    playing: allPlayers.filter(el => selectedPlayers.includes(el.id))
-                }
-            });
-        }
-    }, [createMatch])
 
     const selectPlayer = (id) => {
 
@@ -53,23 +43,32 @@ const Players = ({
     }
 
     const startMatch = () => {
+        
         if(isLoading){
             return;
         };
-        const [id1, id2] = selectedPlayers;
-        setIsLoading(true);
-        console.log('inside');
 
-        dispatch(createMatchAction(id1, id2));
+        push({
+            pathname: '/match',
+            state: {
+                selectedPlayers,
+                playerNames: participants.filter(el => selectedPlayers.includes(el.id)).sort((a, b) => selectedPlayers.indexOf(a.id) - selectedPlayers.indexOf(b.id))
+            }
+            
+        });
     };
     
+    console.log(participants);
     const renderModel = (player = {}, pos = 1, styles) => {
 
-        const { points, username, firstName } = player;
+        const { points, username, firstName, avatar } = player;
         return (
             <div className={s.board_item}>
-                <div style={styles} className={s.board_item_circle}>
-                    {username[0]}
+                <div style={{
+                    ...styles,
+                    backgroundImage: `url(${avatar})`
+                }} className={s.board_item_circle}>
+                    {!avatar ? username[0] : ''}
                     <span className={s.board_item_circle_pos}>{pos}</span>
                 </div>
                 <div className={s.board_item_name}>{firstName}</div>
@@ -129,7 +128,9 @@ const Players = ({
                     </div>
                 )
             })}
-            {selectedPlayers.length === 2 ? <button className={s.button} onClick={startMatch}>Start</button> : <></>}
+            {selectedPlayers.length === 2 ? <button className={s.button} onClick={startMatch}>
+                {!isLoading ? 'Start' : 'Setting Up'}
+            </button> : <></>}
         </main>
     );
 };
