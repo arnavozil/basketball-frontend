@@ -1,2 +1,2 @@
-export const API_STRING = 'https://boiling-tor-08482.herokuapp.com';
-export const LOCAL_API_STING = 'http://localhost:5000';
+export const API_STRING = 'BACKEND_BASE_URL';
+export const LOCAL_API_STING = 'LOCALHOST_BACKEND_BASE_URL';
