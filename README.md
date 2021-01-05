@@ -1,3 +1,5 @@
+# basketball-frontend
+
 ## Note
 
 Make sure to update the src/string/index.js with your corresponding backend url before you run the app either in production or development mode.
