@@ -1,4 +1,7 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Note
+
+Make sure to update the src/string/index.js with your corresponding backend url before you run the app either in production or development mode.
+You can find the backend code for this application here [a link](https://github.com/arnavozil/basketball-backend)
 
 ## Available Scripts
 
